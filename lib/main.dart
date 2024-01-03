@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> sendPredictionRequest() async {
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/predict'),
+        Uri.parse('https://flask-7qb6.onrender.com/predict'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'features': [
