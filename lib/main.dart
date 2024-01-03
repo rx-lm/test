@@ -26,24 +26,35 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController inputController3 = TextEditingController();
   TextEditingController inputController4 = TextEditingController();
 
-  Future<String> sendPredictionRequest() async {
-    final response = await http.post(
-      Uri.parse('http://10.0.2.2:5000/predict'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'features': [
-          int.parse(inputController1.text),
-          int.parse(inputController2.text),
-          int.parse(inputController3.text),
-          int.parse(inputController4.text),
-        ],
-      }),
-    );
+  String predictionResult = ''; // Store the prediction result
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['prediction'].toString();
-    } else {
-      throw Exception('Failed to get prediction');
+  Future<void> sendPredictionRequest() async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:5000/predict'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'features': [
+            int.parse(inputController1.text),
+            int.parse(inputController2.text),
+            int.parse(inputController3.text),
+            int.parse(inputController4.text),
+          ],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          predictionResult =
+              'Prediction: ${jsonDecode(response.body)['prediction']}';
+        });
+      } else {
+        throw Exception('Failed to get prediction');
+      }
+    } catch (error) {
+      setState(() {
+        predictionResult = 'Error: $error';
+      });
     }
   }
 
@@ -81,45 +92,20 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                sendPredictionRequest().then((prediction) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Prediction'),
-                        content: Text('Prediction: $prediction'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }).catchError((error) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Error'),
-                        content: Text('Error: $error'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                });
+                sendPredictionRequest();
               },
               child: const Text('Predict'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Prediction: $predictionResult',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: predictionResult.startsWith('Prediction')
+                    ? Colors.green
+                    : Colors.red,
+              ),
             ),
           ],
         ),

@@ -5,7 +5,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load the trained model
-model = joblib.load('lib\SVR_1.joblib')
+model = joblib.load('SVR_1.joblib')
 
 @app.route('/predict', methods=['POST'])
 def predict():
