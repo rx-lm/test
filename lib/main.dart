@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'Prediction: ${jsonDecode(response.body)['prediction']}';
         });
       } else {
-        throw Exception('Failed to get prediction');
+        predictionResult = 'Failed to get prediction';
       }
     } catch (error) {
       setState(() {
