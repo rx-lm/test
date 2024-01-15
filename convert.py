@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
 import numpy as np
 
 app = Flask(__name__)
+CORS(app)
 
 # Load the trained model
 model = joblib.load('SVR_1.joblib')
@@ -13,7 +15,6 @@ def predict():
         # Get input data from the request
         data = request.get_json(force=True)
         input_data = np.array(data['features'])
-        request.headers.add("Access-Control-Allow-Origin", "*")
         # Reshape the 1D array to a 2D array
         input_data_2d = input_data.reshape(1, -1)
 
