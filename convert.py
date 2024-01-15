@@ -13,7 +13,7 @@ def predict():
         # Get input data from the request
         data = request.get_json(force=True)
         input_data = np.array(data['features'])
-
+        request.headers.add("Access-Control-Allow-Origin", "*")
         # Reshape the 1D array to a 2D array
         input_data_2d = input_data.reshape(1, -1)
 
