@@ -44,15 +44,18 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       if (response.statusCode == 200) {
+        print('Nigana');
         setState(() {
           predictionResult =
               'Prediction: ${jsonDecode(response.body)['prediction']}';
         });
       } else {
+        print("failed");
         predictionResult = 'Failed to get prediction';
       }
     } catch (error) {
       setState(() {
+        print("nag error");
         predictionResult = 'Error: $error';
       });
     }

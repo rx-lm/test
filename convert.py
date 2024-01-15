@@ -27,7 +27,7 @@ def predict():
         return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(port=5000)
 
 
 ##http POST http://127.0.0.1:5000/predict features:='[12.0, 32.0, 32.0, 43.0]'
